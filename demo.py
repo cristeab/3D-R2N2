@@ -12,6 +12,7 @@ if (sys.version_info < (3, 0)):
 import shutil
 import numpy as np
 from subprocess import call
+from pathlib import Path
 
 from PIL import Image
 from models import load_model
@@ -36,8 +37,9 @@ def download_model(fn):
 
 def load_demo_images():
     ims = []
-    for i in range(3):
-        im = Image.open('imgs/%d.png' % i)
+    for filename in Path('sofa').glob('**/*'):
+        im = Image.open(filename)
+        im = im.resize((127, 127), Image.ANTIALIAS)
         ims.append([np.array(im).transpose(
             (2, 0, 1)).astype(np.float32) / 255.])
     return np.array(ims)
